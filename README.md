@@ -1,6 +1,6 @@
-# CranScan OCR language packs
+# CranScan model packs
 
-Recognition language packs for [CranScan](https://github.com/samoylenkodmitry/cranscan) — a private, offline document scanner.
+Downloadable model packs for [CranScan](https://github.com/samoylenkodmitry/cranscan) — a private, offline document scanner: OCR language packs (`packs-v1`) and Receipt-AI vision models (`ai-v1`).
 
 Each pack is a ZIP containing `rec.rten` (a PaddleOCR recognition model converted to the [rten](https://github.com/robertknight/rten) runtime) and `dict.txt`. Install in-app via **Settings → Text recognition** (one-tap download or manual import).
 
@@ -22,6 +22,35 @@ Each pack is a ZIP containing `rec.rten` (a PaddleOCR recognition model converte
 | `multi-hq.zip` | **PP-OCRv6_medium_rec** | 67 MB | Chinese, English, Japanese, Greek, Latin-script languages — highest accuracy available (+5.1% over PP-OCRv5 server) |
 
 Note: no server/large-tier Cyrillic recognition model exists in the PaddleOCR family yet (PP-OCRv6 covers 50 languages but not Cyrillic); `cyrillic.zip` (mobile tier) is the best available for Serbian/Bulgarian and is the only pack whose dictionary includes the Serbian-specific letters ЂЈЉЊЋЏ.
+
+## Receipt AI packs (release `ai-v1`)
+
+Local vision-language models that read a receipt **photo** directly — merchant, date, total, currency, line items and a spending category — far more robustly than OCR + heuristics. Used by the CranScan **desktop** app (Settings → Receipt AI); everything runs on-device via a bundled [llama.cpp](https://github.com/ggml-org/llama.cpp) `llama-server` (build `b9873`, CPU).
+
+| Pack | Model | Download | RAM while reading | Notes |
+| --- | --- | --- | --- | --- |
+| `qwen3vl-4b` | Qwen3-VL-4B-Instruct **Q4_K_M** | ~3.3 GB (2 shards + mmproj) | ~6.7 GB | Best quality; recommended |
+| `qwen3vl-2b` | Qwen3-VL-2B-Instruct **Q8_0** | ~2.3 GB | ~4.5 GB | Faster, good on clean receipts |
+
+Each pack is described by a `<id>.manifest.json` release asset:
+
+```json
+{
+  "id": "qwen3vl-4b",
+  "ram_hint_mb": 6700,
+  "total_bytes": 3333463168,
+  "model": "Qwen3-VL-4B-Instruct-Q4_K_M-00001-of-00002.gguf",
+  "mmproj": "mmproj-Qwen3-VL-4B-Instruct-F16.gguf",
+  "files":   [ { "name": "…", "bytes": 123, "sha256": "…" } ],
+  "servers": { "linux-x86_64": { "name": "…tar.gz", "bytes": 123, "sha256": "…", "bin": "llama-server" } }
+}
+```
+
+- `files` lists the GGUF shards + multimodal projector (every file sha256-pinned; models over 2 GB are split with `llama-gguf-split`, `llama-server` loads the first shard and finds the rest).
+- `servers` maps a platform (`linux-x86_64`, `macos-arm64`, `macos-x86_64`, `windows-x86_64`) to a minimal, flat `llama-server` archive (binary + required shared libraries, repacked from the official llama.cpp `b9873` release).
+- The app downloads `files` + its platform's server archive, verifies every sha256, unpacks the server and talks to it over localhost — nothing leaves the device.
+
+Models are the official [Qwen3-VL](https://huggingface.co/Qwen) instruct releases (Apache-2.0), GGUF quantizations from the ggml-org/unsloth conversions; llama.cpp is MIT. Packs are built and uploaded by [`scripts/build-ai-packs.sh`](https://github.com/samoylenkodmitry/cranscan/blob/main/scripts/build-ai-packs.sh) in the app repo.
 
 ## Detection model
 
