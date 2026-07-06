@@ -1,10 +1,33 @@
-# CranScan model packs
+# About CranScan
 
-Downloadable model packs for [CranScan](https://github.com/samoylenkodmitry/cranscan) — a private, offline document scanner: OCR language packs (`packs-v1`) and Receipt-AI vision models (`ai-v1`).
+**CranScan** — a private, offline document & receipt scanner (Cyrillic + Latin OCR, on-device AI, spending analytics). Everything runs on your device; nothing leaves your phone.
 
-Each pack is a ZIP containing `rec.rten` (a PaddleOCR recognition model converted to the [rten](https://github.com/robertknight/rten) runtime) and `dict.txt`. Install in-app via **Settings → Text recognition** (one-tap download or manual import).
+CranScan is a **closed-source** app published by [**@samoylenkodmitry**](https://github.com/samoylenkodmitry). This repository is **not** the app — it is only the open host for CranScan's optional downloadable model packs (the OCR language packs and Receipt-AI vision models the app can fetch on demand). See [Model packs](#model-packs) below.
 
-## Packs (release `packs-v1`)
+- **Get it on Google Play:** https://play.google.com/store/apps/details?id=com.cranscan.app
+- **Website:** https://cranscan.dmitrysamoylenko.in
+- **Privacy policy:** https://cranscan.dmitrysamoylenko.in/privacy/
+
+## Screenshots
+
+<p>
+  <img src="screenshots/01-library.png" alt="CranScan library of scanned documents and receipts" width="24%" />
+  <img src="screenshots/02-document.png" alt="Parsed receipt with editable line items and category" width="24%" />
+  <img src="screenshots/03-items.png" alt="Spending analytics by category and top merchants" width="24%" />
+  <img src="screenshots/04-settings.png" alt="Settings with on-device OCR language packs" width="24%" />
+</p>
+
+<sub>App UI, v0.9.0. Point your camera at a page or receipt — CranScan crops it, reads the text on-device, extracts merchant/date/total/line items, and keeps a searchable, private library with spending analytics.</sub>
+
+---
+
+# Model packs
+
+Downloadable model packs for CranScan: OCR language packs (`packs-v1`) and Receipt-AI vision models (`ai-v1`). These are optional — the app ships with a bundled Cyrillic + Latin recognizer and only downloads a pack when you choose to.
+
+Each OCR pack is a ZIP containing `rec.rten` (a PaddleOCR recognition model converted to the [rten](https://github.com/robertknight/rten) runtime) and `dict.txt`. Install in-app via **Settings → Text recognition** (one-tap download or manual import).
+
+## OCR language packs (release `packs-v1`)
 
 | Pack | Model | Size | Scripts / languages |
 | --- | --- | --- | --- |
@@ -50,7 +73,7 @@ Each pack is described by a `<id>.manifest.json` release asset:
 - `servers` maps a platform (`linux-x86_64`, `macos-arm64`, `macos-x86_64`, `windows-x86_64`) to a minimal, flat `llama-server` archive (binary + required shared libraries, repacked from the official llama.cpp `b9873` release).
 - The app downloads `files` + its platform's server archive, verifies every sha256, unpacks the server and talks to it over localhost — nothing leaves the device.
 
-Models are the official [Qwen3-VL](https://huggingface.co/Qwen) instruct releases (Apache-2.0), GGUF quantizations from the ggml-org/unsloth conversions; llama.cpp is MIT. Packs are built and uploaded by [`scripts/build-ai-packs.sh`](https://github.com/samoylenkodmitry/cranscan/blob/main/scripts/build-ai-packs.sh) in the app repo.
+Models are the official [Qwen3-VL](https://huggingface.co/Qwen) instruct releases (Apache-2.0), GGUF quantizations from the ggml-org/unsloth conversions; llama.cpp is MIT.
 
 ## Detection model
 
@@ -59,3 +82,7 @@ Models are the official [Qwen3-VL](https://huggingface.co/Qwen) instruct release
 ## Sources
 
 Models originate from [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) (Apache-2.0). ONNX exports: official [PaddlePaddle Hugging Face `*_onnx` repos](https://huggingface.co/PaddlePaddle) (`cyrillic_PP-OCRv5_mobile_rec_onnx`, `PP-OCRv6_medium_rec_onnx`, `PP-OCRv6_small_rec_onnx`, `PP-OCRv6_medium_det_onnx`) and [monkt/paddleocr-onnx](https://huggingface.co/monkt/paddleocr-onnx) (the PP-OCRv5 mobile language packs and PP-OCRv5 server chinese). Converted with `rten-convert`; dictionaries extracted from each model's `inference.yml` (`PostProcess.character_dict`). The `cyrillic` ONNX ships as opset 7 and must be upgraded (e.g. `onnx.version_converter.convert_version(model, 13)`) before `rten-convert`, otherwise Slice ops fail at runtime.
+
+---
+
+*CranScan is closed-source software © [Dmitry Samoylenko](https://github.com/samoylenkodmitry). The models hosted here retain their upstream licenses (PaddleOCR / Qwen3-VL: Apache-2.0; llama.cpp: MIT).*
