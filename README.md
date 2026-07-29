@@ -5,6 +5,7 @@
 CranScan is a **closed-source** app published by [**@samoylenkodmitry**](https://github.com/samoylenkodmitry). This repository is **not** the app — it is only the open host for CranScan's optional downloadable model packs (the OCR language packs and Receipt-AI vision models the app can fetch on demand). See [Model packs](#model-packs) below.
 
 - **Get it on Google Play:** https://play.google.com/store/apps/details?id=com.cranscan.app
+- **Download on the App Store:** https://apps.apple.com/app/id6795579921
 - **Website:** https://cranscan.dmitrysamoylenko.in
 - **Privacy policy:** https://cranscan.dmitrysamoylenko.in/privacy/
 
@@ -16,8 +17,11 @@ CranScan is a **closed-source** app published by [**@samoylenkodmitry**](https:/
   <img src="screenshots/03-items.png" alt="Spending analytics by category and top merchants" width="24%" />
   <img src="screenshots/04-settings.png" alt="Settings with on-device OCR language packs" width="24%" />
 </p>
+<p>
+  <img src="screenshots/05-insights-ipad.png" alt="Spending insights on iPad: monthly trend, category breakdown and top merchant" width="60%" />
+</p>
 
-<sub>App UI, v0.9.0. Point your camera at a page or receipt — CranScan crops it, reads the text on-device, extracts merchant/date/total/line items, and keeps a searchable, private library with spending analytics.</sub>
+<sub>App UI, v1.0.0 (Android, iPhone and iPad). Point your camera at a page or receipt — CranScan crops it, reads the text on-device, extracts merchant/date/total/line items, and keeps a searchable, private library with spending analytics.</sub>
 
 ---
 
